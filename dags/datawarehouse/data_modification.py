@@ -13,7 +13,8 @@ def insert_rows(cur, conn, schema, row):
             cur.execute(
                 f"""INSERT INTO {schema}.{table}("Video_ID", "Video_Title", "Upload_Date", "Duration", "Video_Views", "Likes_Count", "Comments_Count")
                 VALUES (%(video_id)s, %(title)s, %(publishedAt)s, %(duration)s, %(viewCount)s, %(likeCount)s, %(commentCount)s);
-                """, row
+                """, 
+                row,
             )
 
         else:
@@ -24,7 +25,8 @@ def insert_rows(cur, conn, schema, row):
                 f"""
                 INSERT INTO {schema}.{table}("Video_ID", "Video_Title", "Upload_Date", "Duration", "Video_Type", "Video_Views", "Likes_Count", "Comments_Count")
                 VALUES (%(Video_ID)s, %(Video_Title)s, %(Upload_Date)s, %(Duration)s, %(Video_Type)s, %(Duration)s, %(Likes_Count)s, %(Comments_Count)s);
-                """, row
+                """, 
+                row,
             )
 
         conn.commit()
