@@ -6,8 +6,7 @@ from datawarehouse.data_transformation import transform_data
 import logging
 from airflow.decorators import task
 
-# logger = logging.getLogger(__name__)
-logger = logging.getLogger("airflow.task")
+logger = logging.getLogger(__name__)
 table = "yt_api"
 
 @task
@@ -31,20 +30,20 @@ def staging_table():
         for row in YT_data:
 
             if len(table_ids) == 0:
-                insert_rows(cur, conn, schema, row)
+                insert_rows(cur,conn,schema,row)
 
             else:
-                if row['video_id'] in table_ids:
-                    update_rows(cur, conn, schema, row)
+                if row["video_id"] in table_ids:
+                    update_rows(cur,conn,schema,row)
                 else:
-                    insert_rows(cur, conn, schema, row)
+                    insert_rows(cur,conn,schema,row)
 
-        ids_in_json = {row['video_id'] for row in YT_data}
+        ids_in_json = {row["video_id"] for row in YT_data}
 
         ids_to_delete = set(table_ids) - ids_in_json
 
         if ids_to_delete:
-            delete_rows(cur, conn, schema, ids_to_delete)
+            delete_rows(cur,conn,schema,ids_to_delete)
 
         logger.info(f"{schema} table update completed")
 
@@ -54,7 +53,7 @@ def staging_table():
     
     finally:
         if conn and cur:
-            close_conn_cursor(conn, cur)
+            close_conn_cursor(conn,cur)
 
 @task
 def core_table():

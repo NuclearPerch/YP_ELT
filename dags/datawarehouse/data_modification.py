@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 table = "yt_api"
 
-def insert_rows(cur, conn, schema, row):
+def insert_rows(cur,conn,schema,row):
 
     try:
         if schema == 'staging':
@@ -11,10 +11,9 @@ def insert_rows(cur, conn, schema, row):
             video_id = 'video_id'
 
             cur.execute(
-                f"""INSERT INTO {schema}.{table}("Video_ID", "Video_Title", "Upload_Date", "Duration", "Video_Type", "Video_Views", "Likes_Count", "Comments_Count")
-                VALUES (%(video_id)s, %(video_title)s, %(upload_date)s, %(duration)s, %(Video_Type)s, %(video_views)s, %(likes_count)s, %(comments_count)s);
-                """, 
-                row,
+                f"""INSERT INTO {schema}.{table}("Video_ID", "Video_Title", "Upload_Date", "Duration", "Video_Views", "Likes_Count", "Comments_Count")
+                VALUES (%(video_id)s, %(title)s, %(publishedAt)s, %(duration)s, %(viewCount)s, %(likeCount)s, %(commentCount)s);
+                """, row
             )
 
         else:
@@ -24,9 +23,8 @@ def insert_rows(cur, conn, schema, row):
             cur.execute(
                 f"""
                 INSERT INTO {schema}.{table}("Video_ID", "Video_Title", "Upload_Date", "Duration", "Video_Type", "Video_Views", "Likes_Count", "Comments_Count")
-                VALUES (%(Video_ID)s, %(Video_Title)s, %(Upload_Date)s, %(Duration)s, %(Video_Type)s, %(Duration)s, %(Likes_Count)s, %(Comments_Count)s);
-                """, 
-                row,
+                VALUES (%(Video_ID)s, %(Video_Title)s, %(Upload_Date)s, %(Duration)s, %(Video_Type)s, %(Video_Views)s, %(Likes_Count)s, %(Comments_Count)s);
+                """, row
             )
 
         conn.commit()
@@ -37,17 +35,17 @@ def insert_rows(cur, conn, schema, row):
         logger.error(f"Error inserting row with Video_ID: {row[video_id]}")
         raise e
 
-def update_rows(cur, conn, schema, row):
+def update_rows(cur,conn,schema,row):
 
     try:
         # staging
         if schema == 'staging':
             video_id = 'video_id'
-            upload_date = 'upload_date'
-            video_title = 'video_title'
-            video_views = 'video_views'
-            likes_count = 'likes_count'
-            comments_count = 'comments_count'
+            upload_date = 'publishedAt'
+            video_title = 'title'
+            video_views = 'viewCount'
+            likes_count = 'likeCount'
+            comments_count = 'commentsCount'
 
         # core
         else:
@@ -65,24 +63,23 @@ def update_rows(cur, conn, schema, row):
                 "Video_Views" = %({video_views})s,
                 "Likes_Count" = %({likes_count})s,
                 "Comments_Count" = %({comments_count})s
-            WHERE "Video_ID" = %({video_id})s;
-            """,
-            row,
+            WHERE "Video_ID" = %({video_id})s AND "Upload_Date" = %({upload_date})s;
+            """, row
         )
 
         conn.commit()
 
-        logger.info(f"Updated row with Video_ID: {row.get(video_id)}")
+        logger.info(f"Updated row with Video_ID: {row[video_id]}")
 
     except Exception as e:
-        logger.error(f"Error updating row with Video_ID: {row.get(video_id)}")
+        logger.error(f"Error updating row with Video_ID: {row[video_id]} - {e}")
         raise e
-    
-def delete_rows(cur, conn, schema, ids_to_delete):
+
+def delete_rows(cur,conn,schema,ids_to_delete):
 
     try:
 
-        ids_to_delete = f"""({', '.join(f"'{id}" for id in ids_to_delete)})"""
+        ids_to_delete = f"""({', '.join(f"'{id}'" for id in ids_to_delete)})"""
 
         cur.execute(
             f"""
