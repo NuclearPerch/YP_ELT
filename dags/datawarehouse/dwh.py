@@ -6,7 +6,8 @@ from datawarehouse.data_transformation import transform_data
 import logging
 from airflow.decorators import task
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
+logger = logging.getLogger("airflow.task")
 table = "yt_api"
 
 @task
