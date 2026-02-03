@@ -45,7 +45,7 @@ def update_rows(cur,conn,schema,row):
             video_title = 'title'
             video_views = 'viewCount'
             likes_count = 'likeCount'
-            comments_count = 'commentsCount'
+            comments_count = 'commentCount'
 
         # core
         else:
