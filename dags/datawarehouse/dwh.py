@@ -50,6 +50,8 @@ def staging_table():
     except Exception as e:
         logger.error(f"An error occurred during the update of {schema} table: {e}")
         raise e
+        # logger.error(f"An error occurred during the update of {schema} table:")
+        # raise
     
     finally:
         if conn and cur:
