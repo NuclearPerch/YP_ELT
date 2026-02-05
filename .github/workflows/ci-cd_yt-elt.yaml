@@ -3,11 +3,11 @@ name: CI-CD Pipeline
 on:
   push:
     branches:
-      -main
+      - main
       - 'feature/*'
-  pull_rquest:
+  pull_request:
     branches:
-      -main
+      - main
   workflow_dispatch:
 
 jobs:
